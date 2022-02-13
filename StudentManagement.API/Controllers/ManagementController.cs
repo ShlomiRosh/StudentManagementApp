@@ -13,7 +13,6 @@ namespace StudentManagement.API.Controllers
     /// <summary>
     /// Management Controller responsible to all CRUD operations using API calls 
     /// </summary>
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ManagementController : ControllerBase
@@ -44,7 +43,7 @@ namespace StudentManagement.API.Controllers
         public async Task<ActionResult<StudentDto>> Get(int studentId)
         {
             // validate request
-            if (studentId < 1)
+            if (studentId < 0)
             {
                 string msg = $"student id: {studentId} must be positive";
                 _logger.LogError(msg);
@@ -88,7 +87,7 @@ namespace StudentManagement.API.Controllers
                 _logger.LogError(msg);
                 return BadRequest(msg);
             }
-            if (studentDto.Id < 0 || studentDto.SchoolId < 1)
+            if (studentDto.Id < 0 || studentDto.SchoolId < 0)
             {
                 string msg = $"studentDto.id: {studentDto.Id} or " +
                     $"studentDto.SchoolId: {studentDto.SchoolId} are invalid";
@@ -133,7 +132,7 @@ namespace StudentManagement.API.Controllers
                 _logger.LogError(msg);
                 return BadRequest(msg);
             }
-            if (studentDto.Id < 0 || studentDto.SchoolId < 1)
+            if (studentDto.Id < 0 || studentDto.SchoolId < 0)
             {
                 string msg = $"studentDto.id: {studentDto.Id} or " +
                     $"studentDto.SchoolId: {studentDto.SchoolId} are invalid";

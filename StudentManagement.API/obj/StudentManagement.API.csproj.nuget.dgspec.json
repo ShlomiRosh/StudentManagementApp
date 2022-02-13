@@ -49,9 +49,13 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
-            "Microsoft.EntityFrameworkCore.SqlServer": {
+            "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[5.0.14, )"
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[5.0.0, )"
             }
           },
           "imports": [
@@ -229,6 +233,9 @@
               },
               "C:\\Users\\User\\source\\repos\\StudentManagementApp\\Dto\\Dto.csproj": {
                 "projectPath": "C:\\Users\\User\\source\\repos\\StudentManagementApp\\Dto\\Dto.csproj"
+              },
+              "C:\\Users\\User\\source\\repos\\StudentManagementApp\\Model\\Model.csproj": {
+                "projectPath": "C:\\Users\\User\\source\\repos\\StudentManagementApp\\Model\\Model.csproj"
               }
             }
           }
@@ -243,6 +250,12 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.14, )"
+            },
             "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
               "target": "Package",
               "version": "[1.11.1, )"

@@ -9,7 +9,7 @@ namespace Dto
         public string LastName { get; set; }
         public float Gpa { get; set; }
         public School School { get; set; }
-        public int SchoolId { get; set; }
+        public int? SchoolId { get; set; }
     }
     
     public static class StudentDtoExtensions
@@ -22,6 +22,7 @@ namespace Dto
                 FirstName = student.FirstName,
                 LastName = student.LastName,
                 Gpa = student.Gpa,
+                School = student.School,
                 SchoolId = student.SchoolId
             };
         }
@@ -37,6 +38,7 @@ namespace Dto
                 FirstName = studentDto.FirstName,
                 LastName = studentDto.LastName,
                 Gpa = studentDto.Gpa,
+                School = studentDto.School,
                 SchoolId = studentDto.SchoolId
             };
         }

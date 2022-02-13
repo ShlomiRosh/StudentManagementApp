@@ -7,6 +7,6 @@
         public string LastName { get; set; }
         public float Gpa { get; set; }
         public School School { get; set; }
-        public int SchoolId { get; set; }
+        public int? SchoolId { get; set; }
     }
 }
