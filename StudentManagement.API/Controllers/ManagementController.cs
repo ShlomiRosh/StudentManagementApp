@@ -176,7 +176,7 @@ namespace StudentManagement.API.Controllers
         /// <returns>true if the studentDto has valid values, false otherwise</returns>
         private bool CorrectDto(StudentDto studentDto)
         {
-            if (studentDto == null || studentDto.Id < 0 || studentDto.SchoolId < 0 ||
+            if (studentDto == null || studentDto.Id < 0 || studentDto.SchoolId < 0 || studentDto.Age > 18 ||
                 String.IsNullOrEmpty(studentDto.FirstName) || String.IsNullOrEmpty(studentDto.LastName) || 
                 studentDto.Gpa < 0 || String.IsNullOrEmpty(studentDto.School.Name) || 
                 String.IsNullOrEmpty(studentDto.School.Address))

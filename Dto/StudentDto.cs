@@ -7,6 +7,7 @@ namespace Dto
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public int Age { get; set; }
         public float Gpa { get; set; }
         public School School { get; set; }
         public int? SchoolId { get; set; }
@@ -21,6 +22,7 @@ namespace Dto
                 Id = student.Id,
                 FirstName = student.FirstName,
                 LastName = student.LastName,
+                Age = student.Age,
                 Gpa = student.Gpa,
                 School = student.School,
                 SchoolId = student.SchoolId
@@ -37,6 +39,7 @@ namespace Dto
                 Id = studentDto.Id,
                 FirstName = studentDto.FirstName,
                 LastName = studentDto.LastName,
+                Age = studentDto.Age,
                 Gpa = studentDto.Gpa,
                 School = studentDto.School,
                 SchoolId = studentDto.SchoolId
