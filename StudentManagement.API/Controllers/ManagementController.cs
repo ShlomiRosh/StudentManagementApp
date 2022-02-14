@@ -3,9 +3,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using Newtonsoft.Json;
+using System.Text;
 using System.Threading.Tasks;
 using DbAccess.RepositoryInterfaces;
 using Dto;
+using Microsoft.Extensions.Caching.Distributed;
+using Model;
+using StudentManagement.API.RedisCache;
 
 
 namespace StudentManagement.API.Controllers
@@ -19,14 +24,15 @@ namespace StudentManagement.API.Controllers
     {
         private readonly ILogger _logger;
         private readonly IStudentRepository _studentRepository;
-
-
-        public ManagementController(ILogger<ManagementController> logger, IStudentRepository studentRepository)
+        private readonly IRedisCacheService _distributedCache;
+        
+        public ManagementController(ILogger<ManagementController> logger, IStudentRepository studentRepository, IRedisCacheService distributedCache)
         {
             _logger = logger;
             _studentRepository = studentRepository;
+            _distributedCache = distributedCache;
         }
-
+        
         /// <summary>
         /// Get StudentDto object by student id
         /// </summary>
@@ -51,19 +57,25 @@ namespace StudentManagement.API.Controllers
             }
             try
             {
-                // get the student from DB
+                var s = JsonConvert.SerializeObject(studentId) + "GET";
+                // Get data from cache
+                var cacheData = _distributedCache.Get<StudentDto>(s);
+                if (cacheData != null) Ok(cacheData);
+                // If data not found in cache, get data from DB
                 var student = await _studentRepository.GetStudentById(studentId);
-                if (student != null) return Ok(student.ToDto());
-                
+                if (student != null)
+                {
+                    _distributedCache.Set(s, student.ToDto());
+                    return Ok(student.ToDto());
+                }
                 string msg = $"student with student id: {studentId} not found in DB";
                 _logger.LogError(msg);
                 return NotFound(msg);
             }
             catch (Exception e)
             {
-                string msg = $"cannot get student with student id: {studentId}. due to: {e}";
-                _logger.LogError(msg);
-                return StatusCode(StatusCodes.Status500InternalServerError, msg);
+                _logger.LogError(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, e);
             }
         }
 
@@ -81,37 +93,37 @@ namespace StudentManagement.API.Controllers
         public async Task<ActionResult<StudentDto>> Post([FromBody] StudentDto studentDto)
         {
             //validate request
-            if (studentDto == null)
+            if (!CorrectDto(studentDto))
             {
-                string msg = $"studentDto is null";
+                string msg = $"studentDto has invalid values";
                 _logger.LogError(msg);
                 return BadRequest(msg);
             }
-            if (studentDto.Id < 0 || studentDto.SchoolId < 0)
-            {
-                string msg = $"studentDto.id: {studentDto.Id} or " +
-                    $"studentDto.SchoolId: {studentDto.SchoolId} are invalid";
-                _logger.LogError(msg);
-                return BadRequest(msg);
-            }
+
             try
             {
+                string s = JsonConvert.SerializeObject(studentDto) + "POST";
+                // Get data from cache
+                var cacheData = _distributedCache.Get<StudentDto>(s);
+                if (cacheData != null) Ok(cacheData);
                 //add a new student to DB
                 var student = await _studentRepository.AddStudent(studentDto.ToModel());
-                if (student != null) return Ok(student.ToDto());
-                
+                if (student != null) 
+                {
+                    _distributedCache.Set(s, student.ToDto());
+                    return Ok(student.ToDto());
+                }
                 string msg = $"cannot add student with student id: {studentDto.Id} to DB";
                 _logger.LogError(msg);
                 return StatusCode(StatusCodes.Status500InternalServerError, msg);
             }
             catch (Exception e)
             {
-                string msg = $"cannot add student with student id: {studentDto.Id} to DB. due to: {e}";
-                _logger.LogError(msg);
-                return StatusCode(StatusCodes.Status500InternalServerError, msg);
+                _logger.LogError(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, e);
             }
         }
-        
+
         /// <summary>
         /// Change student in the DB
         /// </summary>
@@ -125,26 +137,26 @@ namespace StudentManagement.API.Controllers
         [ProducesResponseType(500)]
         public async Task<ActionResult<StudentDto>> Put([FromBody] StudentDto studentDto)
         {
-            // validate request
-            if (studentDto == null)
+            if (!CorrectDto(studentDto))
             {
-                string msg = $"studentDto is null";
+                string msg = $"studentDto has invalid values";
                 _logger.LogError(msg);
                 return BadRequest(msg);
             }
-            if (studentDto.Id < 0 || studentDto.SchoolId < 0)
-            {
-                string msg = $"studentDto.id: {studentDto.Id} or " +
-                    $"studentDto.SchoolId: {studentDto.SchoolId} are invalid";
-                    _logger.LogError(msg);
-                return BadRequest(msg);
-            }
+            
             try
             {
+                string s = JsonConvert.SerializeObject(studentDto) + "UPDATE";
+                // Get data from cache
+                var cachedData = _distributedCache.Get<StudentDto>(s);
+                if (cachedData != null) return Ok(cachedData);
                 // update student in DB
                 var student = await _studentRepository.UpdateStudent(studentDto.ToModel());
-                if (student != null) return Ok(student.ToDto());
-                
+                if (student != null)
+                {
+                    _distributedCache.Set(s, student.ToDto());
+                    return Ok(student.ToDto());
+                }
                 string msg = $"cannot change the student with student id: {studentDto.Id}";
                 _logger.LogError(msg);
                 return StatusCode(StatusCodes.Status500InternalServerError, msg);
@@ -152,12 +164,28 @@ namespace StudentManagement.API.Controllers
             }
             catch (Exception e)
             {
-                string msg = $"cannot change the student with student id: {studentDto.Id}. due to: {e}";
-                _logger.LogError(msg);
-                return StatusCode(StatusCodes.Status500InternalServerError, msg);
+                _logger.LogError(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, e);
             }
         }
-
+        
+        /// <summary>
+        /// A private method to check if the studentDto has valid values
+        /// </summary>
+        /// <param name="studentDto">StudentDto object contains all of the new student's details</param>
+        /// <returns>true if the studentDto has valid values, false otherwise</returns>
+        private bool CorrectDto(StudentDto studentDto)
+        {
+            if (studentDto == null || studentDto.Id < 0 || studentDto.SchoolId < 0 ||
+                String.IsNullOrEmpty(studentDto.FirstName) || String.IsNullOrEmpty(studentDto.LastName) || 
+                studentDto.Gpa < 0 || String.IsNullOrEmpty(studentDto.School.Name) || 
+                String.IsNullOrEmpty(studentDto.School.Address))
+            {
+                return false;
+            }
+            return true;
+        }
+        
         /// <summary>
         /// Delete studentDto object by student id
         /// </summary>
@@ -181,10 +209,17 @@ namespace StudentManagement.API.Controllers
             }
             try
             {
+                string s = JsonConvert.SerializeObject(studentId) + "DELETE";
+                // Get data from cache
+                var cachedData = _distributedCache.Get<bool>(s);
+                if (cachedData) return Ok(cachedData);
                 //remove student from DB
                 var student = await _studentRepository.DeleteStudent(studentId);
-                if (student != false) return Ok(true);
-                
+                if (student)
+                {
+                    _distributedCache.Set(s, student);
+                    return Ok(true);
+                }
                 string msg = $"cannot remove the student with the id: {studentId} from DB";
                 _logger.LogError(msg);
                 return StatusCode(StatusCodes.Status500InternalServerError, msg);
@@ -192,9 +227,8 @@ namespace StudentManagement.API.Controllers
             }
             catch (Exception e)
             {
-                string msg = $"cannot remove the student with student id: {studentId} from DB. Due to {e}";
-                _logger.LogError(msg);
-                return StatusCode(StatusCodes.Status500InternalServerError, msg);
+                _logger.LogError(e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, e);
             }
         }
 

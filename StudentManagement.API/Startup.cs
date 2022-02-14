@@ -18,6 +18,7 @@ using Microsoft.EntityFrameworkCore;
 using DbAccess;
 
 using Microsoft.VisualBasic;
+using StudentManagement.API.RedisCache;
 
 
 namespace StudentManagement.API
@@ -36,9 +37,14 @@ namespace StudentManagement.API
         {
 
             services.AddControllers();
+            services.AddSingleton<IRedisCacheService, RedisCacheService>();
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<StudentManagementContext>(opt => opt.UseMySql(connectionString,
                 ServerVersion.AutoDetect(connectionString)));
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = Configuration["RedisCacheServerUrl"];
+            });
             services.AddScoped<IStudentRepository, StudentRepository>();
 
             services.AddSwaggerGen(c =>
@@ -49,8 +55,6 @@ namespace StudentManagement.API
 
 
         }
-
-    
 
 // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

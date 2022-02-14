@@ -13,19 +13,11 @@ namespace DbAccess.Repositories
     {
         private readonly StudentManagementContext _context;
         private readonly ILogger _logger;
-            /*private readonly ILessonRepository _lessonRepository;
-            private readonly IStudentLessonRepository _studentLessonRepository;
-            private readonly IMeasurementRepository _measurementRepository;
-            private readonly ILogRepository _logRepository;*/
 
         public StudentRepository(StudentManagementContext context, ILogger<StudentRepository> logger)
         {
             _context = context;
             _logger = logger;
-            /*_lessonRepository = lessonRepository;
-            _studentLessonRepository = studentLessonRepository;
-            _measurementRepository = measurementRepository;
-            _logRepository = logRepository;*/
         }
         
         /// <summary>
@@ -55,7 +47,7 @@ namespace DbAccess.Repositories
         {
             try
             {
-                Student studentFromDb = null;
+                Student studentFromDb;
                 // check if student already exists
                 studentFromDb = await GetStudentByStudent(student);
                 if (studentFromDb == null)
