@@ -21,6 +21,7 @@
     <ProjectReference Include="..\DbAccess\DbAccess.csproj" />
     <ProjectReference Include="..\Dto\Dto.csproj" />
     <ProjectReference Include="..\Model\Model.csproj" />
+    <ProjectReference Include="..\RedisCacheManagement\RedisCacheManagement.csproj" />
   </ItemGroup>
 
 </Project>

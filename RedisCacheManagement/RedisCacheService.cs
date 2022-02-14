@@ -2,7 +2,8 @@
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 
-namespace StudentManagement.API.RedisCache
+
+namespace RedisCacheManagement
 {
     public class RedisCacheService : IRedisCacheService
     {

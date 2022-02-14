@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32126.315
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbAccess", "DbAccess\DbAccess.csproj", "{A506CE2A-85FB-4EE0-8D26-627C03DB65DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbAccess", "DbAccess\DbAccess.csproj", "{A506CE2A-85FB-4EE0-8D26-627C03DB65DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{240DD582-F69D-436F-839B-3A8038250284}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model", "Model\Model.csproj", "{240DD582-F69D-436F-839B-3A8038250284}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dto", "Dto\Dto.csproj", "{E8D6A00A-24E8-49FA-9A2E-802AA486D3D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dto", "Dto\Dto.csproj", "{E8D6A00A-24E8-49FA-9A2E-802AA486D3D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudentManagement.API", "StudentManagement.API\StudentManagement.API.csproj", "{17540C67-6505-42C7-B8A9-57D8CF8F05BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudentManagement.API", "StudentManagement.API\StudentManagement.API.csproj", "{17540C67-6505-42C7-B8A9-57D8CF8F05BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedisCacheManagement", "RedisCacheManagement\RedisCacheManagement.csproj", "{A1A94D3B-CBA8-4A65-9F94-220363A5FD80}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{17540C67-6505-42C7-B8A9-57D8CF8F05BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17540C67-6505-42C7-B8A9-57D8CF8F05BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17540C67-6505-42C7-B8A9-57D8CF8F05BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1A94D3B-CBA8-4A65-9F94-220363A5FD80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1A94D3B-CBA8-4A65-9F94-220363A5FD80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1A94D3B-CBA8-4A65-9F94-220363A5FD80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1A94D3B-CBA8-4A65-9F94-220363A5FD80}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

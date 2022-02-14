@@ -10,7 +10,7 @@ using DbAccess.RepositoryInterfaces;
 using Dto;
 using Microsoft.Extensions.Caching.Distributed;
 using Model;
-using StudentManagement.API.RedisCache;
+using RedisCacheManagement;
 
 
 namespace StudentManagement.API.Controllers

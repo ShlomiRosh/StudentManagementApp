@@ -13,13 +13,15 @@ namespace DbAccess.Repositories
     {
         private readonly StudentManagementContext _context;
         private readonly ILogger _logger;
+        private readonly ISchoolRepository _schoolRepository;
 
-        public StudentRepository(StudentManagementContext context, ILogger<StudentRepository> logger)
+        public StudentRepository(StudentManagementContext context, ILogger<StudentRepository> logger, ISchoolRepository schoolRepository)
         {
             _context = context;
             _logger = logger;
+            _schoolRepository = schoolRepository;
         }
-        
+
         /// <summary>
         /// Get student by id from database
         /// </summary>
@@ -52,6 +54,12 @@ namespace DbAccess.Repositories
                 studentFromDb = await GetStudentByStudent(student);
                 if (studentFromDb == null)
                 {
+                    School school = await _schoolRepository.GetSchoolByNameAndAddress(student.School.Name, student.School.Address);
+                    if (school != null)
+                    {
+                        student.School = school;
+                        student.SchoolId = school.Id;
+                    }
                     _context.Add(student);
                     await _context.SaveChangesAsync();
                     return student;
@@ -65,7 +73,7 @@ namespace DbAccess.Repositories
                 return null;
             }
         }
-        
+
         /// <summary> 
         /// Get student by student data from database, if student exist return it, else return null
         /// </summary>
@@ -76,7 +84,9 @@ namespace DbAccess.Repositories
             try
             {
                 return await _context.Students.Where(
-                    x => x.FirstName == student.FirstName && x.LastName == student.LastName && x.Gpa == student.Gpa)
+                    x => x.FirstName == student.
+                        FirstName && x.LastName == student.LastName && x.Gpa == student.Gpa && x.School.Name == student.
+                        School.Name && x.School.Address == student.School.Address)
                     .Include(x => x.School == student.School).FirstOrDefaultAsync();
             }
             catch (Exception e)

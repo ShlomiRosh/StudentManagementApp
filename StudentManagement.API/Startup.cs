@@ -18,7 +18,7 @@ using Microsoft.EntityFrameworkCore;
 using DbAccess;
 
 using Microsoft.VisualBasic;
-using StudentManagement.API.RedisCache;
+using RedisCacheManagement;
 
 
 namespace StudentManagement.API
@@ -46,7 +46,7 @@ namespace StudentManagement.API
                 options.Configuration = Configuration["RedisCacheServerUrl"];
             });
             services.AddScoped<IStudentRepository, StudentRepository>();
-
+            services.AddScoped<ISchoolRepository, SchoolRepository>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "StudentManagement.API", Version = "v1"});

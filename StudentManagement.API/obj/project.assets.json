@@ -638,6 +638,20 @@
         "runtime": {
           "bin/placeholder/Model.dll": {}
         }
+      },
+      "RedisCacheManagement/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v5.0",
+        "dependencies": {
+          "Microsoft.Extensions.Caching.StackExchangeRedis": "6.0.2",
+          "Newtonsoft.Json": "13.0.1"
+        },
+        "compile": {
+          "bin/placeholder/RedisCacheManagement.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/RedisCacheManagement.dll": {}
+        }
       }
     }
   },
@@ -1944,6 +1958,11 @@
       "type": "project",
       "path": "../Model/Model.csproj",
       "msbuildProject": "../Model/Model.csproj"
+    },
+    "RedisCacheManagement/1.0.0": {
+      "type": "project",
+      "path": "../RedisCacheManagement/RedisCacheManagement.csproj",
+      "msbuildProject": "../RedisCacheManagement/RedisCacheManagement.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -1955,6 +1974,7 @@
       "Microsoft.VisualStudio.Azure.Containers.Tools.Targets >= 1.11.1",
       "Model >= 1.0.0",
       "Newtonsoft.Json >= 13.0.1",
+      "RedisCacheManagement >= 1.0.0",
       "Swashbuckle.AspNetCore >= 5.6.3"
     ]
   },
@@ -2000,6 +2020,9 @@
             },
             "C:\\Users\\User\\source\\repos\\StudentManagementApp\\Model\\Model.csproj": {
               "projectPath": "C:\\Users\\User\\source\\repos\\StudentManagementApp\\Model\\Model.csproj"
+            },
+            "C:\\Users\\User\\source\\repos\\StudentManagementApp\\RedisCacheManagement\\RedisCacheManagement.csproj": {
+              "projectPath": "C:\\Users\\User\\source\\repos\\StudentManagementApp\\RedisCacheManagement\\RedisCacheManagement.csproj"
             }
           }
         }

@@ -1,4 +1,4 @@
-﻿namespace StudentManagement.API.RedisCache
+﻿namespace RedisCacheManagement
 {
     public interface IRedisCacheService
     {
